@@ -22,7 +22,8 @@ router.get('/chat-messages', async (req,res) => {
     try{
         let {id} = req.query;
         const messages = await Message.findAll({where: {chat_id: id}})
-        res.json({data: messages});
+
+        res.json({data: messages.sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt))});
     }catch (e){
         console.log(e);
         res.json({data: false});

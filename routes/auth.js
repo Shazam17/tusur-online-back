@@ -33,9 +33,6 @@ router.post('/register', async (req,res) => {
             password: password,
             birthday: new Date(),
             avatar_url: "",
-            groups: [],
-            friends: [],
-            dialogs: []
         });
         res.json({payload: {},error:false});
     }

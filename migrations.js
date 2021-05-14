@@ -49,10 +49,10 @@ const User_Post = sequelize.define('User_Post', {
     },
     owner_id: {
         type: DataTypes.INTEGER,
-        references: {
-            model: User,
-            key: 'id'
-        }
+    },
+    group_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true
     },
     content: {
         type: DataTypes.STRING
@@ -109,17 +109,9 @@ const Comment = sequelize.define('Comment', {
     },
     owner_id: {
         type: DataTypes.INTEGER,
-        references: {
-            model: User,
-            key: 'id'
-        }
     },
     post_id: {
         type: DataTypes.INTEGER,
-        references: {
-            model: Group_Post,
-            key: 'id'
-        }
     }
 });
 
@@ -219,6 +211,7 @@ async function migrate(){
     await Dialog.sync();
 
     User_Post.hasMany(User)
+    User_Post.hasMany(Group)
     Group_Post.hasMany(Group)
 
     await User_Post.sync();
@@ -231,8 +224,8 @@ async function migrate(){
     await Message.sync();
 
 
-    Comment.hasOne(User)
-    Comment.hasOne(Group_Post)
+    Comment.hasMany(User)
+    // Comment.hasMany(Group_Post)
 
     Story.hasOne(User)
 
@@ -267,7 +260,7 @@ module.exports = {
     Photo,
     Message,
     Dialog,
-    Comment,
+    CommentModel: Comment,
     Story,
     DocumentModel: Document,
     User_Group,

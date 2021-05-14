@@ -43,6 +43,10 @@ router.post('/groups-create', async (req,res) => {
             title: groupName,
             admin_id: ownerId
         });
+        await User_Group.create({
+            user_id: ownerId,
+            group_id: group.id
+        })
         res.json({data: group});
     }catch (e){
         console.log(e);

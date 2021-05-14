@@ -18,10 +18,16 @@ router.get('/posts-group-get', async (req,res) => {
 
 router.get('/posts-get', async (req,res) => {
     try{
-        let {id} = req.query;
+        let {id, isGroup} = req.query;
 
-        const posts = await User_Post.findAll({where: {owner_id: id}})
-        res.json({data: posts});
+        if(isGroup){
+            const posts = await User_Post.findAll({where: {group_id: id}})
+            res.json({data: posts.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))});
+        }else{
+            const posts = await User_Post.findAll({where: {owner_id: id}})
+            res.json({data: posts.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))});
+        }
+
     }catch (e){
         console.log(e);
         res.json({data: false});
@@ -32,21 +38,12 @@ router.post('/create', async (req,res) => {
     try{
         let {id, content, title, isGroup} = req.body;
 
-        let post = null;
-        if(isGroup){
-            post = await Group_Post.create({
-                title: title,
-                content: content,
-                owner_id: id
-            })
-        }else{
-            post = await User_Post.create({
-                title: title,
-                content: content,
-                group_id: id
-            })
-        }
-
+        const post = await User_Post.create({
+            title: title,
+            content: content,
+            group_id: isGroup ? id : null,
+            owner_id: !isGroup ? id : null
+        })
         res.json({data: post});
     }catch (e){
         console.log(e);

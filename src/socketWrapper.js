@@ -1,3 +1,4 @@
+const {CommentModel} = require("../migrations");
 const {User_Group} = require("../migrations");
 const {Group_Post} = require("../migrations");
 const {User_Post} = require("../migrations");
@@ -79,11 +80,15 @@ class SocketWrapper {
             })
 
             socket.on('post_create', async (params) => {
-                await User_Post.create({
+                const post = await User_Post.create({
                     title: params.title,
                     content: params.content,
-                    owner_id: params.id
+                    group_id: params.isGroup ? params.id : null,
+                    owner_id: !params.isGroup ? params.id : null
                 })
+
+                socket.broadcast.emit("new_post", post);
+                socket.emit("new_post", post);
             })
 
             socket.on('group_post_create', async (params) => {
@@ -96,11 +101,14 @@ class SocketWrapper {
             })
 
             socket.on('comment_create', async (params) => {
-                await Comment.create({
+                let comment = await CommentModel.create({
                     text: params.text,
                     owner_id: params.id,
                     post_id: params.post_id
                 })
+                comment.dataValues.owner = await User.findOne({where:{id: params.id}})
+                socket.broadcast.emit("new_comment", comment);
+                socket.emit("new_comment", comment);
             })
 
             socket.on('modify', async (params) => {

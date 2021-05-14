@@ -12,6 +12,7 @@ const friends = require('./routes/friends');
 const groups = require('./routes/groups');
 const posts = require('./routes/posts');
 const stories = require('./routes/stories');
+const comments = require('./routes/comments');
 
 
 const app = express();
@@ -35,5 +36,6 @@ app.use('/friends', friends);
 app.use('/groups', groups);
 app.use('/posts', posts);
 app.use('/stories', stories);
+app.use('/comments', comments);
 
 module.exports = app;
