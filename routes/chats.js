@@ -4,11 +4,12 @@ const router = express.Router();
 
 router.get('/send-message', async (req,res) => {
     try{
-        let {id, text, chat_id} = req.query;
+        let {id, text, chat_id, attachment} = req.query;
         const message = await Message.create({
             text: text,
             owner_id: id,
-            chat_id
+            chat_id,
+            attachment
         })
         res.json({data: message});
     }catch (e){

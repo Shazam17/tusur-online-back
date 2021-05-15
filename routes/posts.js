@@ -11,7 +11,7 @@ router.get('/posts-group-get', async (req,res) => {
         res.json({data: posts});
     }catch (e){
         console.log(e);
-        res.json({data: false});
+        res.json({data: null});
     }
 })
 
@@ -24,13 +24,13 @@ router.get('/posts-get', async (req,res) => {
             const posts = await User_Post.findAll({where: {group_id: id}})
             res.json({data: posts.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))});
         }else{
-            const posts = await User_Post.findAll({where: {owner_id: id}})
+            const posts = await User_Post.findAll({where: {user_id: id}})
             res.json({data: posts.sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))});
         }
 
     }catch (e){
         console.log(e);
-        res.json({data: false});
+        res.json({data: null});
     }
 })
 
@@ -42,12 +42,12 @@ router.post('/create', async (req,res) => {
             title: title,
             content: content,
             group_id: isGroup ? id : null,
-            owner_id: !isGroup ? id : null
+            user_id: !isGroup ? id : null
         })
         res.json({data: post});
     }catch (e){
         console.log(e);
-        res.json({data: false});
+        res.json({data: null});
     }
 })
 

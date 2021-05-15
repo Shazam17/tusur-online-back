@@ -58,7 +58,8 @@ class SocketWrapper {
                 const message = await Message.create({
                     owner_id: params.id,
                     chat_id: params.chat_id,
-                    text: params.text
+                    text: params.text,
+                    attachment: params.attachment
                 })
                 console.log("Send message")
                 socket.broadcast.emit("new_message", message);
